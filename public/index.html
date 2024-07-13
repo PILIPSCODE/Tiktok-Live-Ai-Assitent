@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animated Emojis</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-black h-screen overflow-hidden text-slate-200 flex-col flex justify-center items-center">
+
+
+    <div class="absolute top-24 w-full text-center">
+      <div onclick="speak('halo-halo','gift')" class=" text-3xl" id="timer">04:00</div>
+      <h1 onclick="showEmoji('quiet')" class="my-5 text-xl p-2" ><span class="text-black bg-white p-2 rounded-md">Follow Ganti Warna</span></h1>
+      <h1 onclick="showEmoji('angry')" class="text-3xl">Tanya Apa Saja Ke Pilkia</h1>
+    </div>
+    <div id="chat" class="absolute p-3 hidden text-xl max-h-5/6  backdrop-blur-md bg-black/80 top-32 z-50 mx-5 rounded-md">
+      
+    </div>
+
+    <div class=" vid absolute h-screen -z-40">
+      
+  </div>
+    <div class="emoji-container relative -z-50 " id="emoji1">
+      <img src="pita.webp" alt="pita" class="w-16 -rotate-30 absolute h-16 right-0 top-0 z-20">
+      <div class="eyes">
+        <div class="eye eye1"></div>
+        <div class="eye eye2"></div>
+      </div>
+      <div class="mouth">
+        <div class="mouth-shape"></div>
+      </div>
+      <div class="zzz bg-white hidden">Zzz</div>
+      <div class="hand-container -z-10">
+        <div class="hand hand-left"></div>
+        <div class="hand hand-right"></div>
+      </div>
+    </div>
+
+  <div class="-z-50">
+
+    <div class="flex gap-2 border-2 rounded-md items-center p-2">
+      <h1 >Ekspresi:</h1>
+      <button class="bg-white p-1 rounded-sm text-black" id="btn" onclick="showEmoji('cry')"></button>
+    </div>
+    
+    <div class="flex gap-2 border-2 mt-2 rounded-md items-center p-4">
+      <h1>Status: <span  class="bg-green-500 p-2 rounded-sm">Ready</span></h1>
+    </div>
+  </div>
+    
+
+    <div class="absolute bottom-12 w-11/12 mx-auto p-3 text-xl rounded-md">
+      <marquee behavior="smooth">Perintah Comment untuk Ai.
+         <span class="bg-red-500 mx-2 p-1">1. <strong>pilkia_jelek</strong>: Ekspresi Menjadi Jutek</span> 
+         <span class="bg-blue-500 mx-2 p-1">2. Mengandung emote😭: Ekspresi menjadi Sedih</span> 
+         <span class="bg-yellow-500 mx-2 p-1 text-black">3. <strong>pilkia_cantik</strong>: Ekspresi menjadi Senyum</span> 
+         <span class="bg-gray-500 mx-2 p-1 ">4. <strong>!kodam</strong>: Untuk Cek Kodam</span> 
+         <!-- <span class="bg-white text-black mx-2 p-1 ">5. <strong>!music="Title + Pencipta"</strong>: Play Musik</span>  -->
+      </marquee>
+      <div onclick="resetCountdown()" class=" p-3 border-2 text-center">
+       Halo halo Apa Kabar Semuanya!!
+      </div>
+      <div class=" p-3 border-2">
+        <h1>Cara Bertanya!!</h1>
+        <ul>
+          <li class="my-1">1.Pastikan diakhiri dengan tanda(?) tanya. Contoh: Siapa Pembuatmu?</li>
+          <li>2.Jangan Spam Ya!!</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="z-40 absolute right-2 text-white flex flex-col items-center">
+      <div class="flex items-center justify-between gap-2">
+        <h1>Lompat 1</h1>
+        <img class="w-16 h-16" src="https://storage.streamdps.com/iblock/f59/f5902abbd13178017285a308606fd0dd/cf6a40558018965a8171cf5a575dd9de.png" alt="">
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <h1>Gaje</h1>
+        <img class="w-16 h-16" src="https://storage.streamdps.com/iblock/50f/50f8e7cf26128a6e10d0b792019c1303/94aa2d574cfe6e3893c087cfb5a5efcd.png" alt="">
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <h1>Lompat 2</h1>
+        <img class="w-16 h-16" src="kopi.jpg" alt="">
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <h1>joget Ubur2</h1>
+        <img class="w-16 h-16" src="https://storage.streamdps.com/iblock/688/688f0c350f9cd9751cb02659f4ab105e/2b2d66c2f9767fc8332ee1b5ba0c1057.png" alt="">
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <h1>Joget</h1>
+        <img class="w-16 h-16" src="https://storage.streamdps.com/iblock/ae6/ae65a581d82f828e9e3834cd8444986a/9a1acf1d35f2cbef7a4c3929f9587567.png" alt="">
+      </div>
+    </div>
+    <!-- <div class="z-40 w-24 absolute left-2 text-white flex flex-col items-center">
+       <img class="w-24 h-24" id="logomusic" src="https://www.freepnglogos.com/uploads/apple-music-logo-circle-png-28.png" alt="Music-logo">
+        <marquee id="music">no music is playing now</marquee>
+    </div> -->
+
+   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    
+  </body>
+</html>
