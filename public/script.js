@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+const socket = io("https://pilkunandpilkiaserver.vercel.app/");
 let messageQueue = [].reverse();
 let emoji = "quiet";
 let isProcessing = false;
