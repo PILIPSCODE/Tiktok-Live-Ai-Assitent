@@ -1,6 +1,6 @@
 import { WebcastPushConnection } from "tiktok-live-connector";
 
-let tiktokUsername ="xudofinanda";
+let tiktokUsername ="mundogaming10";
 let tiktokLiveConnection = new WebcastPushConnection(tiktokUsername, {
   requestConfig: {
     timeout: 30000, // Increase timeout to 30 seconds
@@ -24,5 +24,19 @@ function connectWithRetry(retryCount = 0) {
     });
 }
 
+// Event listeners for auto-reconnect
+tiktokLiveConnection.on("disconnected", () => {
+  
+  console.warn("Disconnected from live stream. Attempting to reconnect...");
+  connectWithRetry();
+});
+
+tiktokLiveConnection.on("error", (err) => {
+  console.error("Error in live stream connection", err);
+  if (err.message.includes("network")) {
+    console.log("Network error detected. Attempting to reconnect...");
+    connectWithRetry();
+  }
+});
 
 export { connectWithRetry, tiktokLiveConnection};

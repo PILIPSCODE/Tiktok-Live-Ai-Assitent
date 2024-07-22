@@ -1,9 +1,9 @@
-import { aiResponse } from "../utils/aiResponse.js";
+import { aiPrevi, aiResponse } from "../utils/aiResponse.js";
 
 let pertanyaanQueue = [];
-let pertanyaanQPrioritas = [];
+let pertanyaanQPrioritas = [{ user: "pilkunwiay" },  {user:"lluv_fany"}];
 
-export function handleCommand(io,data) {
+export async function handleCommand(io, data,prev) {
   const datas = {
     comment: data.comment,
     user: data.nickname,
@@ -11,9 +11,8 @@ export function handleCommand(io,data) {
     uniqueId: data.uniqueId,
   };
 
-  if (pertanyaanQPrioritas.some((e) => datas.uniqueId.includes(e.user))) {
-    const pertanyaan = { prev: true, comment: data.comment, uniqueId: data.uniqueId, user: data.nickname };
-    aiResponse(io,pertanyaan);
+  if (prev === 'prioritas') {
+    aiPrevi(io,datas)
   } else {
     pertanyaanQueue.push(datas);
   }
@@ -21,9 +20,9 @@ export function handleCommand(io,data) {
   setInterval(() => {
     if (pertanyaanQueue.length > 0) {
       const pertanyaan = pertanyaanQueue.shift();
-      aiResponse(io,pertanyaan);
+      aiResponse(io, pertanyaan);
     }
-  }, 2500);
+  }, 4000);
 }
 
 export function handleExpression(io, data) {
@@ -49,4 +48,4 @@ export function handleShare(io, data) {
 
 setInterval(() => {
   pertanyaanQueue = [];
-}, 10000);
+}, 3000);

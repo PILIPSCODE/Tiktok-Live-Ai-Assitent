@@ -27,9 +27,34 @@ export async function aiResponse(io,pertanyaan) {
     const result = {
       user,
       comment,
+      prev:false,
       response: response?.choices[0]?.message?.content,
     };
     console.log(result);
     io.emit("chat response", result);
   }
+}
+
+
+export async function aiPrevi(io,pertanyaan) {
+  const { comment, user } = pertanyaan;
+  let response;
+
+  if (["!kodam", "!khodam"].some((cmd) => comment.includes(cmd))) {
+    response = await getKhodam(`expresi:normal comment:${comment} + user:${user}`);
+  } else if (comment.includes("?")) {
+    response = await getGroqChatCompletion(`${comment} + user:${user}`);
+  }
+
+  if (response) {
+    const result = {
+      user,
+      comment,
+      prev:true,
+      response: response?.choices[0]?.message?.content,
+    };
+    console.log(result);
+    io.emit("chat response", result);
+  }
+
 }

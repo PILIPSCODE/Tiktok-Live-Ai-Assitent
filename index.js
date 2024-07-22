@@ -5,6 +5,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import { connectWithRetry, tiktokLiveConnection } from "./TIktok.js";
 import { setupTiktokEvents } from "./handlers/tiktokEvents.js";
+import { setInterval } from "timers/promises";
 
 dotenv.config();
 
@@ -34,3 +35,8 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log(`Server berjalan pada port ${port}`);
 });
+
+
+setInterval(() => {
+  connectWithRetry()
+},18000)

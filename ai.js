@@ -18,7 +18,7 @@ async function getGroqChatCompletion(prompt) {
             content: `Jawab Dengan singkat dan jelas (200 karakter) menggunakan bhs indonesia ${prompt}`,
           },
         ],
-        model: "llama3-70b-8192",
+        model: "llama3-8b-8192",
       });
     } catch (error) {
       console.error("Error fetching chat completion:", error);
