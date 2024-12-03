@@ -1,39 +1,57 @@
-import { handleCommand, handleExpression, handleFollow, handleGift, handleMember, handleShare } from "./chatHandlers.js";
+import {
+  handleCommand,
+  handleExpression,
+  handleFollow,
+  handleGift,
+  handleMember,
+  handleShare,
+} from "./chatHandlers.js";
 
-export function setupTiktokEvents(io, tiktokLiveConnection) {
-let pertanyaanQPrioritas = [{user:"pilkunwiay"}];
+export function setupTiktokEvents(socket, username, tiktokLiveConnection) {
 
-  tiktokLiveConnection.on("chat", (data) => {
+  let pertanyaanQPrioritas = [{ user: "pilkunwiay" }];
+  let pertanyaanQueue = [];
+
+  if(username === "" || username === undefined) return
+
+
+  setInterval(() => {
+    const pertanyaan = pertanyaanQueue.shift();
+    handleCommand(socket, pertanyaan, "normal");
+  }, 5000);
+  tiktokLiveConnection.once('connected', state => socket.to(username).emit('tiktokConnection', "Connected"));
+  tiktokLiveConnection.once('disconnected', reason => socket.to(username).emit('tiktokConnection', "Disconected"));
+
+  tiktokLiveConnection.once('streamEnd', () => socket.to(username).emit("tiktokConnection",'streamEnded'));
+
+  tiktokLiveConnection.connection.on("chat", (data) => {
+    const datas = {
+      roomUser:username,
+      comment: data.comment,
+      user: data.nickname,
+      prev: false,
+      uniqueId: data.uniqueId,
+    };
     const comment = data.comment?.toLowerCase();
-    const commands = ["!kodam", "!khodam", "?"];
-    const expressions = [`${process.env.MODEL}_jelek`,`😭`,"😂","🥶",`${process.env.MODEL === "pilkun"?"pilkun_ganteng":"pilkia_cantik" }`];
-
-    if (pertanyaanQPrioritas.some((e) => data.uniqueId.includes(e.user))) {
-      handleCommand(io,data,"prioritas");
-      console.log("prev")
-      
-    }else if (commands.some((cmd) => comment.includes(cmd))) {
-      handleCommand(io,data,"normal");
-      console.log("normal")
-    }
-
-    if (expressions.some((exp) => comment.includes(exp))) {
-      handleExpression(io, data);
-    }
+    const commands = [""];
    
+    // if (pertanyaanQPrioritas.some((e) => data.uniqueId.includes(e.user))) {
+    //   handleCommand(socket, data, "prioritas");
+    // } else if (commands.some((cmd) => comment.includes(cmd))) {
+      if (pertanyaanQueue.length <= 10) {
+        pertanyaanQueue.push(datas);
+      }
+    // }
   });
 
-
-  tiktokLiveConnection.on("follow", (data) => handleFollow(io, data));
-  tiktokLiveConnection.on("gift", (data) => {
+  tiktokLiveConnection.connection.on("follow", (data) => handleFollow(socket,username, data));
+  tiktokLiveConnection.connection.on("gift", (data) => {
     if (data.giftType === 1 && !data.repeatEnd) {
-      handleGift(io, data)
-      pertanyaanQPrioritas.push({user:data.uniqueId})
-      console.log(data.giftName)
-  } else{
-      
-  }
+      handleGift(socket, username, data);
+      pertanyaanQPrioritas.push({ user: data.uniqueId });
+    } else {
+    }
   });
-  tiktokLiveConnection.on("member", (data) => handleMember(io, data));
-  tiktokLiveConnection.on("share", (data) => handleShare(io, data));
+  tiktokLiveConnection.connection.on("member", (data) => handleMember(socket,username, data));
+  tiktokLiveConnection.connection.on("share", (data) => handleShare(socket, username, data));
 }

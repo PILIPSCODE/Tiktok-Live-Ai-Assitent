@@ -1,51 +1,39 @@
 import { aiPrevi, aiResponse } from "../utils/aiResponse.js";
+import { ChatEnd } from "../utils/isProcessing.js";
 
-let pertanyaanQueue = [];
-let pertanyaanQPrioritas = [{ user: "pilkunwiay" },  {user:"lluv_fany"}];
 
-export async function handleCommand(io, data,prev) {
-  const datas = {
-    comment: data.comment,
-    user: data.nickname,
-    prev: false,
-    uniqueId: data.uniqueId,
-  };
 
-  if (prev === 'prioritas') {
-    aiPrevi(io,datas)
-  } else {
-    pertanyaanQueue.push(datas);
+
+export async function handleCommand(socket,pertanyaan) {
+
+
+  processQueue()
+  
+  async function processQueue() {
+    console.log("this is chat end",ChatEnd)
+    if (ChatEnd === false ) return;
+      aiResponse(socket, pertanyaan);
+
   }
-
-  setInterval(() => {
-    if (pertanyaanQueue.length > 0) {
-      const pertanyaan = pertanyaanQueue.shift();
-      aiResponse(io, pertanyaan);
-    }
-  }, 4000);
 }
 
-export function handleExpression(io, data) {
-  io.emit("ekspresi", data);
+export function handleExpression(socket, username,data) {
+  socket.to(username).emit("ekspresi", data);
 }
 
-export function handleFollow(io, data) {
-  io.emit("follow", data.uniqueId);
+export function handleFollow(socket, username,data) {
+  socket.to(username).emit("follow", data);
 }
 
-export function handleGift(io, data) {
-  pertanyaanQPrioritas.push(data);
-  io.emit("gift", data);
+export function handleGift(socket, username,data) {
+  socket.to(username).emit("gift", data);
 }
 
-export function handleMember(io, data) {
-  io.emit("join", `Hallo ${data.uniqueId}, selamat datang!`);
+export function handleMember(socket, username,data) {
+  socket.to(username).emit("joinChat", `Hallo ${data.uniqueId}, selamat datang!`);
 }
 
-export function handleShare(io, data) {
-  io.emit("share", `Hallo ${data.uniqueId}, selamat datang!`);
+export function handleShare(socket,username,data){ 
+  socket.to(username).emit("share",data);
 }
 
-setInterval(() => {
-  pertanyaanQueue = [];
-}, 3000);
