@@ -4,36 +4,38 @@ import { ChatEnd } from "../utils/isProcessing.js";
 
 
 
-export async function handleCommand(socket,pertanyaan) {
+export async function handleCommand(socket,pertanyaan,data) {
 
 
   processQueue()
   
   async function processQueue() {
-    console.log("this is chat end",ChatEnd)
     if (ChatEnd === false ) return;
-      aiResponse(socket, pertanyaan);
-
+      aiResponse(socket, pertanyaan,data);
   }
 }
 
-export function handleExpression(socket, username,data) {
-  socket.to(username).emit("ekspresi", data);
+export function handleExpression(socket, dataUser ,data) {
+  socket.to(dataUser.username).emit("ekspresi", data);
 }
 
-export function handleFollow(socket, username,data) {
-  socket.to(username).emit("follow", data);
+export function handleFollow(socket, dataUser,data) {
+  socket.to(dataUser.username).emit("follow", data);
+  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId} Followed You!`)
 }
 
-export function handleGift(socket, username,data) {
-  socket.to(username).emit("gift", data);
+export function handleGift(socket, dataUser,data) {
+  socket.to(dataUser.username).emit("gift", data);
+  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId}, gift ${data.giftName}!`)
 }
 
-export function handleMember(socket, username,data) {
-  socket.to(username).emit("joinChat", `Hallo ${data.uniqueId}, selamat datang!`);
+export function handleMember(socket, dataUser ,data) {
+  socket.to(dataUser.username).emit("joinChat", `Hallo ${data.uniqueId}, selamat datang!`);
+  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId}, Joined!`)
 }
 
-export function handleShare(socket,username,data){ 
-  socket.to(username).emit("share",data);
+export function handleShare(socket,dataUser,data){ 
+  socket.to(dataUser.username).emit("share",data);
+  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId}, Shared Live!`)
 }
 

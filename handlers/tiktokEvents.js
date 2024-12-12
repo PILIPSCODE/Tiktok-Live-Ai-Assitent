@@ -7,26 +7,43 @@ import {
   handleShare,
 } from "./chatHandlers.js";
 
-export function setupTiktokEvents(socket, username, tiktokLiveConnection) {
+export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
 
   let pertanyaanQPrioritas = [{ user: "pilkunwiay" }];
   let pertanyaanQueue = [];
+  let quietview = [ {
+    "response": "Halo Halo Semuanya Selamat Datang ya, Jangan Lupa Follow, Tap Tap dan Share Ya",
+    "animation": "Waving"
+  },
+    {
+    "response": "Mau aku dance atau jawab pertanyaan bisa aja ya",
+    "animation": "HipHopDancing2"
+  }
+]
 
-  if(username === "" || username === undefined) return
+  if(dataUser.username === "" || dataUser.username === undefined) return
 
 
   setInterval(() => {
+    
     const pertanyaan = pertanyaanQueue.shift();
-    handleCommand(socket, pertanyaan, "normal");
+    handleCommand(socket, pertanyaan, dataUser);
   }, 5000);
-  tiktokLiveConnection.once('connected', state => socket.to(username).emit('tiktokConnection', "Connected"));
-  tiktokLiveConnection.once('disconnected', reason => socket.to(username).emit('tiktokConnection', "Disconected"));
 
-  tiktokLiveConnection.once('streamEnd', () => socket.to(username).emit("tiktokConnection",'streamEnded'));
+  setInterval(() => {
+    if(pertanyaanQueue.length === 0 ){
+       const pertanyaan = quietview.shift();
+      socket.to(dataUser.username).emit("chat response", pertanyaan);
+    }
+  },10000)
+
+  tiktokLiveConnection.once('connected', state => socket.to(dataUser.username).emit('tiktokConnection', "Connected"));
+  tiktokLiveConnection.once('disconnected', reason => socket.to(dataUser.username).emit('tiktokConnection', "Disconected"));
+
+  tiktokLiveConnection.once('streamEnd', () => socket.to(dataUser.username).emit("tiktokConnection",'streamEnded'));
 
   tiktokLiveConnection.connection.on("chat", (data) => {
     const datas = {
-      roomUser:username,
       comment: data.comment,
       user: data.nickname,
       prev: false,
@@ -44,7 +61,7 @@ export function setupTiktokEvents(socket, username, tiktokLiveConnection) {
     // }
   });
 
-  tiktokLiveConnection.connection.on("follow", (data) => handleFollow(socket,username, data));
+  tiktokLiveConnection.connection.on("follow", (data) => handleFollow(socket,dataUser, data));
   tiktokLiveConnection.connection.on("gift", (data) => {
     if (data.giftType === 1 && !data.repeatEnd) {
       handleGift(socket, username, data);
@@ -52,6 +69,6 @@ export function setupTiktokEvents(socket, username, tiktokLiveConnection) {
     } else {
     }
   });
-  tiktokLiveConnection.connection.on("member", (data) => handleMember(socket,username, data));
-  tiktokLiveConnection.connection.on("share", (data) => handleShare(socket, username, data));
+  tiktokLiveConnection.connection.on("member", (data) => handleMember(socket,dataUser, data));
+  tiktokLiveConnection.connection.on("share", (data) => handleShare(socket, dataUser, data));
 }

@@ -14,19 +14,19 @@ const port = 8000;
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND || "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
 
-app.use(cors({ origin: "http://localhost:3000", transports: ["websocket"] }));
+app.use(cors({ origin:  process.env.FRONTEND || "http://localhost:3000" , transports: ["websocket"] }));
 
 io.on("connection", (socket) => {
   let tiktokLiveConnection;
   console.log("a new client connected");
 
   socket.on("username", (data, options) => {
-    socket.join(data);
+    socket.join(data.username);
 
     if (typeof options === "object" && options) {
       delete options.requestOptions;
@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
 
     if (data == "") return;
     try {
-      tiktokLiveConnection = new TikTokConnectionWrapper(data, options, true, {
+      tiktokLiveConnection = new TikTokConnectionWrapper(data.username, options, true, {
         requestConfig: {
           timeout: 30000,
         },
@@ -55,14 +55,13 @@ io.on("connection", (socket) => {
     isChatEnd(data);
   });
 
-  socket.on("manualy-disconnect", () => {
-    console.log("user disconnected");
+  socket.on("manualy-disconnect", (data) => {
     if (tiktokLiveConnection) {
+      io.to(data).emit('tiktokConnection', "Disconected")
       tiktokLiveConnection.disconnect();
   }
   })
   socket.on("disconnect", () => {
-    console.log("user disconnected");
     if (tiktokLiveConnection) {
       tiktokLiveConnection.disconnect();
   }

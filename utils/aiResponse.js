@@ -1,31 +1,30 @@
-import { getGroqChatCompletion } from "../ai.js";
-
+// import { getGroqChatCompletion } from "../ai.js";
+import { GroqAiChatCompletion } from "../aiConnection.js";
 let userLastMessage = {};
 let userLastTime = {};
 let RATELIMIT = 5000;
-export async function aiResponse(socket, pertanyaan) {
+
+export async function aiResponse(socket, pertanyaan,data) {
   if (pertanyaan === undefined) return;
-  const { comment, user, roomUser } = pertanyaan;
+  const { comment, user} = pertanyaan;
   const currentTime = new Date().getTime();
   if (userLastMessage[user] === comment) {
-    console.log(`Duplicate message for user:${user}`);
+    socket.to(data.username).emit("console",`Duplicate message for user:${user}`);
     return;
   }
   if (currentTime - userLastTime[user] === RATELIMIT) {
-    console.log(`Rate Limit for user:${user}`);
+     socket.to(data.username).emit("console",`Rate Limit for user:${user}`);
     return;
   }
-  if(roomUser === undefined) return
+  if(data.username === undefined) return
 
   userLastMessage[user] = comment;
   userLastTime[user] = currentTime;
 
-  let response;
-  response = await getGroqChatCompletion(`${comment}`);
+  let message = await new GroqAiChatCompletion(data.apikey,data.prompt,data.model,pertanyaan).connect()
 
   try {
      
-    const message = JSON.parse(response?.choices[0]?.message?.content);
     if (message) {
       const result = {
         user,
@@ -34,8 +33,8 @@ export async function aiResponse(socket, pertanyaan) {
         response: message.response,
         animation: message.animation,
       };
-      socket.to(roomUser).emit("chat response", result);
-      console.log(result);
+      socket.to(data.username).emit("chat response", result);
+      socket.to(data.username).emit("console",JSON.stringify(result));
     }
   } catch (error) {
     console.log(error);
