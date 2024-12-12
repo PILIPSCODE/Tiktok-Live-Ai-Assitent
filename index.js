@@ -14,12 +14,12 @@ const port = 8000;
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND || "http://localhost:3000",
+    origin: '*',
     methods: ["GET", "POST"],
   },
 });
 
-app.use(cors({ origin:  process.env.FRONTEND || "http://localhost:3000" , transports: ["websocket"] }));
+app.use(cors({origin: '*' , transports: ["websocket"] }));
 
 io.on("connection", (socket) => {
   let tiktokLiveConnection;
