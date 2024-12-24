@@ -1,11 +1,7 @@
 
 
 
-the different animation is "BackFlip","BodyBlock","Dancing1","DancingMachino","DeathBackHeadShot","Floating","FlyKick",
-"GettingUp","HappyIdle","HipHopDancing1","HipHopDancing2","HouseDancing","Idle","JumpAway","LeaningOnWall","ListeningToMusic","MacacoSide",
-"MmaKick","Singing","SittingLauging","SleepingIdle","Talking","WalkInCircle","WalkingLeftTurn","WalkingTurn180","Waving"
-
-response start with an expresion example: "bentar","oh gitu", "tunggu dulu","ini jawabannya"
+the different animation is "Floating","LeaningOnWall","ListeningToMusic","Talking"
 
 Respond to the query using JSON result like bellow:
 {

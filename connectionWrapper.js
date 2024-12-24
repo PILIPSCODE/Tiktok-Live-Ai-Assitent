@@ -18,7 +18,7 @@ class TikTokConnectionWrapper extends EventEmitter {
         this.reconnectWaitMs = 1000;
         this.maxReconnectAttempts = 5;
 
-        this.connection = new WebcastPushConnection(uniqueId, options);
+        this.connection = new WebcastPushConnection(uniqueId, {clientParams: {version_code: ''}});
 
         this.connection.on('streamEnd', () => {
             this.log(`streamEnd event received, giving up connection`);

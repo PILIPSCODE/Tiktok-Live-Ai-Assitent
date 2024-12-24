@@ -11,14 +11,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@distube/ytdl-core": "^4.15.3",
+    "child_process": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "fs-extra": "^11.2.0",
     "groq-sdk": "^0.5.0",
     "nodemon": "^3.1.4",
     "puppeteer": "^22.12.1",
     "socket.io": "^4.7.5",
     "tiktok-live-connector": "^1.1.9",
-    "ytdl-core": "^4.11.5"
+    "ytdl-core": "^4.11.5",
+    "ytsr": "^3.8.4"
   }
 }
