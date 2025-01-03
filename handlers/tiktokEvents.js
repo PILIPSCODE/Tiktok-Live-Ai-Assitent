@@ -1,6 +1,5 @@
 import {
   handleCommand,
-  handleExpression,
   handleFollow,
   handleGift,
   handleMember,
@@ -8,22 +7,29 @@ import {
 } from "./chatHandlers.js";
 
 import { ChatEnd } from "../utils/isProcessing.js";
+import { FrameCommentDetector } from "../utils/FramerDetector.js";
+
+const frameCommentDetector = new FrameCommentDetector(2, 5, 5000, 5000);
+frameCommentDetector.monitor();
 
 export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
-  let pertanyaanQPrioritas = [{ user: "pilkunwiay" }];
   let pertanyaanQueue = [];
-
+  let state = "quiet";
   if (dataUser.username === "" || dataUser.username === undefined) return;
 
-  setInterval(() => {
-    if (ChatEnd !== true) return;
-    const pertanyaan = pertanyaanQueue.reverse().shift();
-    handleCommand(socket, pertanyaan, dataUser);
-  }, 3000);
+  frameCommentDetector.on("stateChange", (newState, count) => {
+    state = newState;
+  });
 
-  setInterval(() => {
-    pertanyaanQueue = [];
-  }, 60000);
+  console.log(state);
+  setInterval(
+    () => {
+      if (ChatEnd !== true) return;
+      const pertanyaan = pertanyaanQueue.reverse().shift();
+      handleCommand(socket, pertanyaan, dataUser);
+    },
+    state === "quiet" ? 800 : state === "middle" ? 3000 : 5000
+  );
 
   tiktokLiveConnection.once("connected", (state) =>
     socket.to(dataUser.username).emit("tiktokConnection", "Connected")
@@ -43,13 +49,15 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
       prev: false,
       uniqueId: data.uniqueId,
     };
+    frameCommentDetector.addComment({ text: data.comment });
+
     const comment = data.comment?.toLowerCase();
     const commands = [""];
 
     // if (pertanyaanQPrioritas.some((e) => data.uniqueId.includes(e.user))) {
     //   handleCommand(socket, data, "prioritas");
     // } else if (commands.some((cmd) => comment.includes(cmd))) {
-    if (pertanyaanQueue.length <= 10) {
+    if (pertanyaanQueue.length <= 4) {
       pertanyaanQueue.push(datas);
     }
     // }

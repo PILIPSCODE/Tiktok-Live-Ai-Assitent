@@ -1,7 +1,7 @@
 
 
 
-the different animation is "Floating","LeaningOnWall","ListeningToMusic","Talking"
+the different animation is "ListeningToMusic","Talking"
 
 Respond to the query using JSON result like bellow:
 {
