@@ -1,0 +1,6 @@
+
+
+  
+.youtube.com	TRUE	/	FALSE	0	YSC  oqws2Xw6GXE
+.youtube.com	TRUE	/	FALSE	1760230652	PREF  f4=4000000&f6=40000000&tz=Asia.Jakarta
+.youtube.com	TRUE	/	FALSE	1751857062	VISITOR_INFO1_LIVE  NAbrxzOCwBI
