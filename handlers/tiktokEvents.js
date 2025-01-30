@@ -61,6 +61,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
       pertanyaanQueue.push(datas);
     }
     // }
+    socket.to(dataUser.username).emit("chat", data);
   });
 
   tiktokLiveConnection.connection.on("follow", (data) =>

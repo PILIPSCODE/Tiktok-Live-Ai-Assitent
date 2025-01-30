@@ -3,12 +3,12 @@ import { EventEmitter } from "events";
 class FrameCommentDetector extends EventEmitter {
   constructor(quietThreshold, middleThreshold, interval, frameDuration) {
     super();
-    this.quietThreshold = quietThreshold; // Max comments for "quiet" state
-    this.middleThreshold = middleThreshold; // Min comments for "active" state
-    this.interval = interval; // Time interval in milliseconds (e.g., 10 seconds)
-    this.frameDuration = frameDuration; // Duration of each frame in milliseconds
-    this.comments = []; // Array to store comment timestamps
-    this.currentState = "quiet"; // Initial state
+    this.quietThreshold = quietThreshold;
+    this.middleThreshold = middleThreshold;
+    this.interval = interval;
+    this.frameDuration = frameDuration;
+    this.comments = [];
+    this.currentState = "quiet";
   }
 
   addComment(comment) {
