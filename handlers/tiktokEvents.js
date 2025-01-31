@@ -23,9 +23,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
   setInterval(() => {
     if (ChatEnd !== true) return;
     const pertanyaan = pertanyaanQueue.reverse().shift();
-    if (pertanyaan?.comment?.includes("?")) {
-      handleCommand(socket, pertanyaan, dataUser);
-    }
+    handleCommand(socket, pertanyaan, dataUser);
   }, 0);
 
   tiktokLiveConnection.once("connected", (state) =>
@@ -55,9 +53,10 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
     //   handleCommand(socket, data, "prioritas");
     // } else if (commands.some((cmd) => comment.includes(cmd))) {
     if (pertanyaanQueue.length <= 4) {
-      pertanyaanQueue.push(datas);
+      if (data.comment.includes("?")) {
+        pertanyaanQueue.push(datas);
+      }
     }
-    // }
     socket.to(dataUser.username).emit("chat", data);
   });
 
