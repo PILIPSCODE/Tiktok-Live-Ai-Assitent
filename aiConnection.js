@@ -71,6 +71,16 @@ class GroqAiChatCompletion extends EventEmitter{
 }
 
 
+class OpenAiCompletion extends EventEmitter {
+  constructor(apiKey,prompt,model,Question){
+    super()
+    this.apiKey = apiKey;
+    this.prompt = prompt;
+    this.model = model; 
+    this.Question = Question;
+}
+}
+
 
 
 export  {

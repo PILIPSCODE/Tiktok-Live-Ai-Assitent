@@ -7,29 +7,26 @@ import {
 } from "./chatHandlers.js";
 
 import { ChatEnd } from "../utils/isProcessing.js";
-import { FrameCommentDetector } from "../utils/FramerDetector.js";
+// import { FrameCommentDetector } from "../utils/FramerDetector.js";
 
-const frameCommentDetector = new FrameCommentDetector(2, 5, 5000, 5000);
-frameCommentDetector.monitor();
+// const frameCommentDetector = new FrameCommentDetector(2, 5, 5000, 5000);
+// frameCommentDetector.monitor();
 
 export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
   let pertanyaanQueue = [];
-  let state = "quiet";
+  // let state = "quiet";
   if (dataUser.username === "" || dataUser.username === undefined) return;
 
-  frameCommentDetector.on("stateChange", (newState, count) => {
-    state = newState;
-  });
-
-  console.log(state);
-  setInterval(
-    () => {
-      if (ChatEnd !== true) return;
-      const pertanyaan = pertanyaanQueue.reverse().shift();
+  // frameCommentDetector.on("stateChange", (newState, count) => {
+  //   state = newState;
+  // });
+  setInterval(() => {
+    if (ChatEnd !== true) return;
+    const pertanyaan = pertanyaanQueue.reverse().shift();
+    if (pertanyaan?.comment?.includes("?")) {
       handleCommand(socket, pertanyaan, dataUser);
-    },
-    state === "quiet" ? 800 : state === "middle" ? 3000 : 5000
-  );
+    }
+  }, 0);
 
   tiktokLiveConnection.once("connected", (state) =>
     socket.to(dataUser.username).emit("tiktokConnection", "Connected")
@@ -49,7 +46,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
       prev: false,
       uniqueId: data.uniqueId,
     };
-    frameCommentDetector.addComment({ text: data.comment });
+    // frameCommentDetector.addComment({ text: data.comment });
 
     const comment = data.comment?.toLowerCase();
     const commands = [""];
