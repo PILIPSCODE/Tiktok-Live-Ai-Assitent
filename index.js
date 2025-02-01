@@ -30,10 +30,10 @@ const io = new Server(server, {
 
 app.use(cors({ origin: "*", transports: ["websocket"] }));
 
-const ytDlpPath = "/app/tools/yt-dlp";
-const ffmpegPath = "/app/tools/ffmpeg";
-// const ytDlpPath = path.resolve(__dirname, "tools/yt-dlp.exe");
-// const ffmpegPath = path.resolve(__dirname, "tools/ffmpeg.exe");
+// const ytDlpPath = "/app/tools/yt-dlp";
+// const ffmpegPath = "/app/tools/ffmpeg";
+const ytDlpPath = path.resolve(__dirname, "tools/yt-dlp.exe");
+const ffmpegPath = path.resolve(__dirname, "tools/ffmpeg.exe");
 
 app.get("/reqMusic", async (req, res) => {
   const title = req.query.title;

@@ -20,11 +20,6 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
   // frameCommentDetector.on("stateChange", (newState, count) => {
   //   state = newState;
   // });
-  setInterval(() => {
-    if (ChatEnd !== true) return;
-    const pertanyaan = pertanyaanQueue.reverse().shift();
-    handleCommand(socket, pertanyaan, dataUser);
-  }, 0);
 
   tiktokLiveConnection.once("connected", (state) =>
     socket.to(dataUser.username).emit("tiktokConnection", "Connected")
@@ -44,19 +39,17 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
       prev: false,
       uniqueId: data.uniqueId,
     };
-    // frameCommentDetector.addComment({ text: data.comment });
-
     const comment = data.comment?.toLowerCase();
     const commands = [""];
-
     // if (pertanyaanQPrioritas.some((e) => data.uniqueId.includes(e.user))) {
     //   handleCommand(socket, data, "prioritas");
     // } else if (commands.some((cmd) => comment.includes(cmd))) {
-    if (pertanyaanQueue.length <= 4) {
-      if (data.comment.includes("?")) {
-        pertanyaanQueue.push(datas);
+    if (data.comment.includes("?")) {
+      if (ChatEnd === true) {
+        handleCommand(socket, datas, dataUser);
       }
     }
+
     socket.to(dataUser.username).emit("chat", data);
   });
 
