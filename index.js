@@ -35,6 +35,8 @@ const ffmpegPath = "/app/tools/ffmpeg";
 // const ytDlpPath = path.resolve(__dirname, "tools/yt-dlp.exe");
 // const ffmpegPath = path.resolve(__dirname, "tools/ffmpeg.exe");
 
+const access_token =
+  "ya29.a0AXeO80T7Cuj2QnkzxeqTEFJEvJeKc2Ge25fZd2akAJzAhnud932Drj-K_Yww8HKuIvFHsPKsMfzbQ4KJ5vCNOX0TWb7_YPMI5KgJzZ8aEv9CEXv6J3EEouchyxbkMfts5zKhtKrG4YsDb8-gLvTRQDjiqzHCqJd5qk-a3VPSaCgYKAWQSARMSFQHGX2MixrxLYfp14VklEUX-t8cwmA0175";
 app.get("/reqMusic", async (req, res) => {
   const title = req.query.title;
 
@@ -60,7 +62,7 @@ app.get("/reqMusic", async (req, res) => {
 
     await fsExtra.ensureDir(audioDir);
     await execCommand(
-      `${ytDlpPath} --cookies cookies.txt -x --audio-format mp3 --ffmpeg-location "${ffmpegPath}" -o "${audioPath}" "https://www.youtube.com/watch?v=${video.id}"`
+      `${ytDlpPath} --add-header "Authorization: Bearer ${access_token}" -x --audio-format mp3 --ffmpeg-location "${ffmpegPath}" -o "${audioPath}" "https://www.youtube.com/watch?v=${video.id}"`
     );
 
     const data = fs.readFileSync(audioPath);
