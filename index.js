@@ -120,7 +120,7 @@ io.on("connection", (socket) => {
 
   socket.on("manualy-disconnect", (data) => {
     if (tiktokLiveConnection) {
-      io.to(data).emit("tiktokConnection", "Disconectedd");
+      io.to(data).emit("tiktokConnection", "Disconected");
       tiktokLiveConnection.disconnect();
     }
   });
