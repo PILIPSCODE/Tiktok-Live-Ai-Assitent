@@ -59,7 +59,7 @@ app.get("/reqMusic", async (req, res) => {
 
     await fsExtra.ensureDir(audioDir);
     await execCommand(
-      `${ytDlpPath} --cookies-from-browser chrome --cookies cookies.txt -x --audio-format mp3 --ffmpeg-location "${ffmpegPath}" -o "${audioPath}" "https://www.youtube.com/watch?v=${video.id}"`
+      `${ytDlpPath} -cookies cookies.txt -x --audio-format mp3 --ffmpeg-location "${ffmpegPath}" -o "${audioPath}" "https://www.youtube.com/watch?v=${video.id}"`
     );
 
     const data = fs.readFileSync(audioPath);
