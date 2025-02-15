@@ -7,19 +7,19 @@ import {
 } from "./chatHandlers.js";
 
 import { ChatEnd } from "../utils/isProcessing.js";
-// import { FrameCommentDetector } from "../utils/FramerDetector.js";
+import { FrameCommentDetector } from "../utils/FramerDetector.js";
 
-// const frameCommentDetector = new FrameCommentDetector(2, 5, 5000, 5000);
-// frameCommentDetector.monitor();
+const frameCommentDetector = new FrameCommentDetector(2, 5, 5000, 5000);
+frameCommentDetector.monitor();
 
+let isProcessing = false;
 export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
-  let pertanyaanQueue = [];
-  // let state = "quiet";
+  let state = "quiet";
   if (dataUser.username === "" || dataUser.username === undefined) return;
 
-  // frameCommentDetector.on("stateChange", (newState, count) => {
-  //   state = newState;
-  // });
+  frameCommentDetector.on("stateChange", (newState, count) => {
+    state = newState;
+  });
 
   tiktokLiveConnection.once("connected", (state) =>
     socket.to(dataUser.username).emit("tiktokConnection", "Connected")
@@ -45,8 +45,16 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
     //   handleCommand(socket, data, "prioritas");
     // } else if (commands.some((cmd) => comment.includes(cmd))) {
     if (data.comment.includes("?")) {
-      if (ChatEnd === true) {
-        handleCommand(socket, datas, dataUser);
+      frameCommentDetector.addComment();
+      if (ChatEnd === true && !isProcessing) {
+        isProcessing = true;
+        setTimeout(
+          () => {
+            handleCommand(socket, datas, dataUser);
+            isProcessing = false;
+          },
+          state === "quiet" ? 0 : state === "middle" ? 1000 : 3000
+        );
       }
     }
 

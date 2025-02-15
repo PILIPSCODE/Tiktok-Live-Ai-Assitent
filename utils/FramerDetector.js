@@ -11,7 +11,7 @@ class FrameCommentDetector extends EventEmitter {
     this.currentState = "quiet";
   }
 
-  addComment(comment) {
+  addComment() {
     const now = Date.now();
     this.comments.push(now);
   }
