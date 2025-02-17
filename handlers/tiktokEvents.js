@@ -44,7 +44,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
     // if (pertanyaanQPrioritas.some((e) => data.uniqueId.includes(e.user))) {
     //   handleCommand(socket, data, "prioritas");
     // } else if (commands.some((cmd) => comment.includes(cmd))) {
-    if (data.comment.includes("?")) {
+    if (data.comment.includes("")) {
       frameCommentDetector.addComment();
       if (ChatEnd === true && !isProcessing) {
         isProcessing = true;

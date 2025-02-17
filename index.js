@@ -83,6 +83,10 @@ io.on("connection", (socket) => {
   let tiktokLiveConnection;
   console.log("a new client connected");
 
+  socket.on("EmbedJoin", (data) => {
+    socket.join(data);
+    console.log(`a user visit username ${data}`);
+  });
   socket.on("username", (data, options) => {
     socket.join(data.username);
 
