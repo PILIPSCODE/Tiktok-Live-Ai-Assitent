@@ -12,6 +12,15 @@ import fsExtra from "fs-extra";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { execCommand } from "./utils/exectCommand.js";
+import userRoutes from "./routes/userRoutes.js";
+import charactherRoutes from "./routes/charactherRoutes.js";
+import userConnectionRoutes from "./routes/userConnectionRoutes.js";
+import interactionRoutes from "./routes/interactionRoutes.js";
+import resourceRoutes from "./routes/resourceRoutes.js";
+import musicRoutes from "./routes/musicRoutes.js";
+import chatSettingRoutes from "./routes/chatSettingRoutes.js";
+import bodyParser from "body-parser";
+import "./utils/jobs.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,11 +38,21 @@ const io = new Server(server, {
 });
 
 app.use(cors({ origin: "*", transports: ["websocket"] }));
+app.use(bodyParser.json());
+
+app.use("/api/user", userRoutes);
+app.use("/api/characther", charactherRoutes);
+app.use("/api/interaction", interactionRoutes);
+app.use("/api/userConnection", userConnectionRoutes);
+app.use("/api/chatSetting", chatSettingRoutes);
+app.use("/api/music", musicRoutes);
+app.use("/api/resource", resourceRoutes);
 
 const ytDlpPath = "/app/tools/yt-dlp";
 const ffmpegPath = "/app/tools/ffmpeg";
 // const ytDlpPath = path.resolve(__dirname, "tools/yt-dlp.exe");
 // const ffmpegPath = path.resolve(__dirname, "tools/ffmpeg.exe");
+
 app.get("/reqMusic", async (req, res) => {
   const title = req.query.title;
 
