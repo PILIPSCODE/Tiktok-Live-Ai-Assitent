@@ -39,7 +39,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
       prev: false,
       uniqueId: data.uniqueId,
     };
-    if (data.comment.includes("")) {
+    if (data.comment.includes("?")) {
       frameCommentDetector.addComment();
       if (ChatEnd === true && !isProcessing) {
         isProcessing = true;
