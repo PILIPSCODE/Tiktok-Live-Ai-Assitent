@@ -168,3 +168,5 @@ SELECT * FROM characters;
 SELECT * FROM resources;
 SELECT * FROM chat_settings;
 SELECT * FROM user_connections;
+
+
