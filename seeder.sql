@@ -1,7 +1,7 @@
 -- Hapus database jika sudah ada, lalu buat ulang
-DROP DATABASE IF EXISTS aipi;
-CREATE DATABASE aipi;
-USE aipi;
+DROP DATABASE IF EXISTS railway;
+CREATE DATABASE railway;
+USE railway;
 
 -- Matikan validasi foreign key sementara
 SET FOREIGN_KEY_CHECKS = 0;
@@ -101,13 +101,13 @@ CREATE TABLE IF NOT EXISTS user_connections (
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Hapus data lama jika ada
-DELETE FROM users;
-DELETE FROM interactions;
-DELETE FROM music;
-DELETE FROM characters;
-DELETE FROM resources;
-DELETE FROM chat_settings;
-DELETE FROM user_connections;
+-- DELETE FROM users;
+-- DELETE FROM interactions;
+-- DELETE FROM music;
+-- DELETE FROM characters;
+-- DELETE FROM resources;
+-- DELETE FROM chat_settings;
+-- DELETE FROM user_connections;
 
 DELIMITER //
 

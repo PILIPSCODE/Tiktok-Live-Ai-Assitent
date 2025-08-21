@@ -18,19 +18,19 @@ export async function aiResponse(socket, pertanyaan, data) {
   userLastMessage[user] = comment;
   userLastTime[user] = currentTime;
 
-  let message = await new GroqAiChatCompletion(
-    data.apikey,
-    data.prompt,
-    data.model,
-    pertanyaan
-  ).connect();
-
   try {
+    let message = await new GroqAiChatCompletion(
+      data.apikey,
+      data.prompt,
+      data.model,
+      pertanyaan
+    ).connect();
     if (message) {
       const result = {
         user,
         comment,
         prev: false,
+        playOn: "ChatResponse",
         response: message.response,
         animation: message.animation,
       };
@@ -38,7 +38,7 @@ export async function aiResponse(socket, pertanyaan, data) {
       socket.to(data.username).emit("console", JSON.stringify(result));
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
@@ -56,23 +56,22 @@ export async function aiPrevi(socket, pertanyaan) {
 
   userLastMessageprev[user] = comment;
 
-  let response;
-
-  response = await getGroqChatCompletion(`${comment}`);
-
   try {
+    let response;
+    response = await getGroqChatCompletion(`${comment}`);
     const message = JSON.parse(response?.choices[0]?.message?.content);
     if (message) {
       const result = {
         user,
         comment,
         prev: true,
+        playOn: "ChatResponse",
         response: message.response,
         animation: message.animation,
       };
       socket.emit("chat response", result);
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }

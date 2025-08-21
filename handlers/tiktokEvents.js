@@ -24,9 +24,9 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
   tiktokLiveConnection.once("connected", (state) =>
     socket.to(dataUser.username).emit("tiktokConnection", "Connected")
   );
-  tiktokLiveConnection.once("disconnected", (reason) =>
-    socket.to(dataUser.username).emit("tiktokConnection", "Disconected")
-  );
+  tiktokLiveConnection.once("disconnected", (reason) => {
+    socket.to(dataUser.username).emit("tiktokConnection", reason);
+  });
 
   tiktokLiveConnection.once("streamEnd", () =>
     socket.to(dataUser.username).emit("tiktokConnection", "streamEnded")
@@ -39,7 +39,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
       prev: false,
       uniqueId: data.uniqueId,
     };
-    if (data.comment.includes("?")) {
+    if (data.comment.includes("")) {
       frameCommentDetector.addComment();
       if (ChatEnd === true && !isProcessing) {
         isProcessing = true;
