@@ -5,7 +5,6 @@ import { Server } from "socket.io";
 import cors from "cors";
 import { setupTiktokEvents } from "./handlers/tiktokEvents.js";
 import { TikTokConnectionWrapper } from "./connectionWrapper.js";
-import { isChatEnd } from "./utils/isProcessing.js";
 import path from "path";
 import ytsr from "ytsr";
 import fsExtra from "fs-extra";
@@ -21,6 +20,7 @@ import musicRoutes from "./routes/musicRoutes.js";
 import chatSettingRoutes from "./routes/chatSettingRoutes.js";
 import bodyParser from "body-parser";
 import "./utils/jobs.js";
+import { ChatEnd, isChatEnd } from "./utils/isProcessing.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -107,7 +107,9 @@ io.on("connection", (socket) => {
     console.log(`a user visit username ${data}`);
   });
   socket.on("username", (data, options) => {
-    socket.join(data.username);
+    const room = data.username + socket.id;
+    socket.join(room);
+    isChatEnd(true, room);
 
     if (typeof options === "object" && options) {
       delete options.requestOptions;
@@ -133,12 +135,18 @@ io.on("connection", (socket) => {
       console.log(error);
     }
     if (tiktokLiveConnection) {
-      setupTiktokEvents(io, data, tiktokLiveConnection);
+      let newData = {
+        username: data.username + socket.id,
+        prompt: data.prompt,
+        model: data.model,
+        apikey: data.apikey,
+      };
+      setupTiktokEvents(io, newData, tiktokLiveConnection);
     }
-  });
-
-  socket.on("callback", (data) => {
-    isChatEnd(data);
+    socket.on("callback", (payload) => {
+      isChatEnd(payload, room);
+      console.log(room, ":", payload);
+    });
   });
 
   socket.on("manualy-disconnect", (data) => {

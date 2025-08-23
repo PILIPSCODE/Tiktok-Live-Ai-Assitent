@@ -1,41 +1,45 @@
 import { aiPrevi, aiResponse } from "../utils/aiResponse.js";
 import { ChatEnd } from "../utils/isProcessing.js";
 
-
-
-
-export async function handleCommand(socket,pertanyaan,data) {
-
-
-  processQueue()
-  
-  async function processQueue() {
-    if (ChatEnd === false ) return;
-      aiResponse(socket, pertanyaan,data);
+export async function handleCommand(socket, pertanyaan, data, username) {
+  const room = username + socket.id;
+  processQueue();
+  function processQueue() {
+    if (ChatEnd[room] === false) return;
+    aiResponse(socket, pertanyaan, data);
   }
 }
 
-export function handleExpression(socket, dataUser ,data) {
+export function handleExpression(socket, dataUser, data) {
   socket.to(dataUser.username).emit("ekspresi", data);
 }
 
-export function handleFollow(socket, dataUser,data) {
+export function handleFollow(socket, dataUser, data) {
   socket.to(dataUser.username).emit("follow", data);
-  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId} Followed You!`)
+  socket
+    .to(dataUser.username)
+    .emit("console", `User: ${data.uniqueId} Followed You!`);
 }
 
-export function handleGift(socket, dataUser,data) {
+export function handleGift(socket, dataUser, data) {
   socket.to(dataUser.username).emit("gift", data);
-  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId}, gift ${data.giftName}!`)
+  socket
+    .to(dataUser.username)
+    .emit("console", `User: ${data.uniqueId}, gift ${data.giftName}!`);
 }
 
-export function handleMember(socket, dataUser ,data) {
-  socket.to(dataUser.username).emit("joinChat", `Hallo ${data.uniqueId}, selamat datang!`);
-  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId}, Joined!`)
+export function handleMember(socket, dataUser, data) {
+  socket
+    .to(dataUser.username)
+    .emit("joinChat", `Hallo ${data.uniqueId}, selamat datang!`);
+  socket
+    .to(dataUser.username)
+    .emit("console", `User: ${data.uniqueId}, Joined!`);
 }
 
-export function handleShare(socket,dataUser,data){ 
-  socket.to(dataUser.username).emit("share",data);
-  socket.to(dataUser.username).emit("console",`User: ${data.uniqueId}, Shared Live!`)
+export function handleShare(socket, dataUser, data) {
+  socket.to(dataUser.username).emit("share", data);
+  socket
+    .to(dataUser.username)
+    .emit("console", `User: ${data.uniqueId}, Shared Live!`);
 }
-

@@ -1,9 +1,7 @@
+const ChatEnd = {};
 
-
-let ChatEnd = true
-function isChatEnd (data){
-    ChatEnd = data
+function isChatEnd(data, room) {
+  ChatEnd[room] = data;
 }
 
-
-export { isChatEnd, ChatEnd};
+export { isChatEnd, ChatEnd };

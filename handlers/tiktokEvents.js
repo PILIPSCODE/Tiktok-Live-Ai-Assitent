@@ -6,8 +6,8 @@ import {
   handleShare,
 } from "./chatHandlers.js";
 
-import { ChatEnd } from "../utils/isProcessing.js";
 import { FrameCommentDetector } from "../utils/FramerDetector.js";
+import { ChatEnd } from "../utils/isProcessing.js";
 
 const frameCommentDetector = new FrameCommentDetector(2, 5, 5000, 5000);
 frameCommentDetector.monitor();
@@ -41,7 +41,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
     };
     if (data.comment.includes("")) {
       frameCommentDetector.addComment();
-      if (ChatEnd === true && !isProcessing) {
+      if (!isProcessing && ChatEnd[dataUser.username] === true) {
         isProcessing = true;
         setTimeout(
           () => {
