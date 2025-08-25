@@ -25,7 +25,13 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
     socket.to(dataUser.username).emit("tiktokConnection", "Connected")
   );
   tiktokLiveConnection.once("disconnected", (reason) => {
-    socket.to(dataUser.username).emit("tiktokConnection", reason);
+    let msg = "";
+    if (reason == "Error: Request failed with status code 429") {
+      msg = "Server is busy to many request";
+    } else {
+      msg = reason;
+    }
+    socket.to(dataUser.username).emit("tiktokConnection", msg);
   });
 
   tiktokLiveConnection.once("streamEnd", () =>
@@ -35,6 +41,7 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
   tiktokLiveConnection.connection.on("chat", (data) => {
     const datas = {
       comment: data.comment,
+      img: data.profilePictureUrl,
       user: data.nickname,
       prev: false,
       uniqueId: data.uniqueId,

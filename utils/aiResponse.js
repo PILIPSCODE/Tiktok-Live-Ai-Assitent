@@ -5,7 +5,7 @@ let userLastTime = {};
 
 export async function aiResponse(socket, pertanyaan, data) {
   if (pertanyaan === undefined) return;
-  const { comment, user } = pertanyaan;
+  const { comment, user, img } = pertanyaan;
   const currentTime = new Date().getTime();
   if (userLastMessage[user] === comment) {
     socket
@@ -29,6 +29,7 @@ export async function aiResponse(socket, pertanyaan, data) {
       const result = {
         user,
         comment,
+        img,
         prev: false,
         playOn: "ChatResponse",
         response: message.response,

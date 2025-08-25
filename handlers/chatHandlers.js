@@ -1,8 +1,8 @@
 import { aiPrevi, aiResponse } from "../utils/aiResponse.js";
 import { ChatEnd } from "../utils/isProcessing.js";
 
-export async function handleCommand(socket, pertanyaan, data, username) {
-  const room = username + socket.id;
+export async function handleCommand(socket, pertanyaan, data) {
+  const room = data.username + socket.id;
   processQueue();
   function processQueue() {
     if (ChatEnd[room] === false) return;
