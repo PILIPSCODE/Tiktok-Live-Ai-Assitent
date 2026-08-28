@@ -1,23 +1,30 @@
-# Use Node.js as the base image
-FROM node:18
+# Use Node.js slim variant (smaller image, faster pull)
+FROM node:18-slim
+
+# Install curl (not included in slim) and clean up apt cache
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files to the container
+# Copy package files first for better layer caching
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the project files
 COPY . .
 
 # Download yt-dlp and place it in the tools directory
 RUN mkdir -p ./tools && \
     curl -L -o ./tools/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp && \
-    curl -L -o ./tools/yt-dlp.exe https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe && \
-    chmod +x ./tools/yt-dlp ./tools/yt-dlp.exe
+    chmod +x ./tools/yt-dlp
 
 # Make other binaries executable if they exist
 RUN chmod +x ./tools/ffmpeg ./tools/ffprobe || true
-
-# Install dependencies
-RUN npm install
 
 # Expose the application port
 EXPOSE 3000
