@@ -39,14 +39,15 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
   );
 
   tiktokLiveConnection.connection.on("chat", (data) => {
+    const comment = data.content || data.comment || "";
     const datas = {
-      comment: data.comment,
-      img: data.profilePictureUrl,
-      user: data.nickname,
+      comment: comment,
+      img: data.user?.avatarThumb?.urlList?.[0] || "",
+      user: data.user?.nickname || "",
       prev: false,
-      uniqueId: data.uniqueId,
+      uniqueId: data.user?.displayId || data.user?.uniqueId || "",
     };
-    if (data.comment.includes("")) {
+    if (comment.includes("")) {
       frameCommentDetector.addComment();
       if (!isProcessing && ChatEnd[dataUser.username] === true) {
         isProcessing = true;
@@ -67,7 +68,8 @@ export function setupTiktokEvents(socket, dataUser, tiktokLiveConnection) {
     handleFollow(socket, dataUser, data)
   );
   tiktokLiveConnection.connection.on("gift", (data) => {
-    if (data.giftType === 1 && !data.repeatEnd) {
+    const giftType = data.giftDetails?.giftType ?? data.giftType;
+    if (giftType === 1 && !data.repeatEnd) {
       handleGift(socket, dataUser, data);
     } else {
     }

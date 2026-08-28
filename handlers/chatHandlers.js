@@ -18,28 +18,28 @@ export function handleFollow(socket, dataUser, data) {
   socket.to(dataUser.username).emit("follow", data);
   socket
     .to(dataUser.username)
-    .emit("console", `User: ${data.uniqueId} Followed You!`);
+    .emit("console", `User: ${data.user?.displayId || data.user?.uniqueId || data.uniqueId} Followed You!`);
 }
 
 export function handleGift(socket, dataUser, data) {
   socket.to(dataUser.username).emit("gift", data);
   socket
     .to(dataUser.username)
-    .emit("console", `User: ${data.uniqueId}, gift ${data.giftName}!`);
+    .emit("console", `User: ${data.user?.displayId || data.user?.uniqueId || data.uniqueId}, gift ${data.giftDetails?.giftName || data.giftName}!`);
 }
 
 export function handleMember(socket, dataUser, data) {
   socket
     .to(dataUser.username)
-    .emit("joinChat", `Hallo ${data.uniqueId}, selamat datang!`);
+    .emit("joinChat", `Hallo ${data.user?.displayId || data.user?.uniqueId || data.uniqueId}, selamat datang!`);
   socket
     .to(dataUser.username)
-    .emit("console", `User: ${data.uniqueId}, Joined!`);
+    .emit("console", `User: ${data.user?.displayId || data.user?.uniqueId || data.uniqueId}, Joined!`);
 }
 
 export function handleShare(socket, dataUser, data) {
   socket.to(dataUser.username).emit("share", data);
   socket
     .to(dataUser.username)
-    .emit("console", `User: ${data.uniqueId}, Shared Live!`);
+    .emit("console", `User: ${data.user?.displayId || data.user?.uniqueId || data.uniqueId}, Shared Live!`);
 }

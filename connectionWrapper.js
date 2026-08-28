@@ -1,4 +1,4 @@
-import { WebcastPushConnection } from 'tiktok-live-connector';
+import { TikTokLiveConnection } from 'tiktok-live-connector';
 import { EventEmitter }  from 'events';
 
 
@@ -18,7 +18,7 @@ class TikTokConnectionWrapper extends EventEmitter {
         this.reconnectWaitMs = 1000;
         this.maxReconnectAttempts = 5;
 
-        this.connection = new WebcastPushConnection(uniqueId, {clientParams: {version_code: ''}});
+        this.connection = new TikTokLiveConnection(uniqueId, {});
 
         this.connection.on('streamEnd', () => {
             this.log(`streamEnd event received, giving up connection`);
@@ -39,7 +39,7 @@ class TikTokConnectionWrapper extends EventEmitter {
 
     connect(isReconnect) {
         this.connection.connect().then((state) => {
-            this.log(`${isReconnect ? 'Reconnected' : 'Connected'} to roomId ${state.roomId}, websocket: ${state.upgradedToWebsocket}`);
+            this.log(`${isReconnect ? 'Reconnected' : 'Connected'} to roomId ${state.roomId}`);
 
             globalConnectionCount += 1;
 
@@ -103,7 +103,7 @@ class TikTokConnectionWrapper extends EventEmitter {
         this.clientDisconnected = true;
         this.reconnectEnabled = false;
 
-        if (this.connection.getState().isConnected) {
+        if (this.connection.isConnected) {
             this.connection.disconnect();
         }
     }
