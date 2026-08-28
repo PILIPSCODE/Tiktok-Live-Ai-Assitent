@@ -18,6 +18,9 @@ export async function aiResponse(socket, pertanyaan, data) {
   userLastMessage[user] = comment;
   userLastTime[user] = currentTime;
 
+  console.log(`[AI] Processing comment from "${user}": "${comment}"`);
+  console.log(`[AI] Using model: ${data.model}, apikey: ${data.apikey ? data.apikey.substring(0, 8) + '...' : 'EMPTY'}`);
+
   try {
     let message = await new GroqAiChatCompletion(
       data.apikey,
@@ -25,6 +28,7 @@ export async function aiResponse(socket, pertanyaan, data) {
       data.model,
       pertanyaan
     ).connect();
+    console.log(`[AI] Groq response:`, JSON.stringify(message));
     if (message) {
       const result = {
         user,
@@ -39,6 +43,7 @@ export async function aiResponse(socket, pertanyaan, data) {
       socket.to(data.username).emit("console", JSON.stringify(result));
     }
   } catch (error) {
+    console.error(`[AI] Error in aiResponse:`, error);
     throw error;
   }
 }
