@@ -1,9 +1,7 @@
 
+the different animation is "ListeningToMusic","Talking","Waving"
 
-
-the different animation is "ListeningToMusic","Talking"
-
-Respond to the query using JSON result like bellow:
+Respond to the query using JSON result like bellow only json:
 {
   "response": "Your response",
   "animation": "One of the provided animations"
